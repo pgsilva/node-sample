@@ -2,7 +2,7 @@ let express = require("express");
 let bodyParser = require("body-parser");
 let app = express();
 let cors = require("cors");
-let route = require("./routes");
+let route = require("./routes/routeUser");
 
 app.use(cors());
 app.use(
