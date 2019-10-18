@@ -9,6 +9,7 @@ const chalk = require('chalk');
 const ip = require('./ip')
 const morgan = require('morgan')
 const requestIp = require('request-ip');
+const loginRouter = require('./routes/login.route');
 require('dotenv').config()
 
 const port = process.env.SERVER_PORT;
@@ -29,6 +30,7 @@ app.use(bodyParser.json());
 app.use(requestIp.mw());
 app.use(morgan('dev'))
 app.use("/morales", route);
+app.use("/morales/login", loginRouter);
 
 //ENDPOINTS CONFIG
 let logger = (req, res, next) => {
