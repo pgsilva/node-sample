@@ -22,7 +22,7 @@ app.use(
 );
 app.use(bodyParser.text({ type: 'text/html' }))
 app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: false }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(cookieParser())
 // parse application/json
 app.use(bodyParser.json());
