@@ -28,7 +28,7 @@ app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(requestIp.mw());
 app.use(morgan('dev'))
-app.use("/morales/", route);
+app.use("/morales", route);
 
 //ENDPOINTS CONFIG
 let logger = (req, res, next) => {
