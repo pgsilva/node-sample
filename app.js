@@ -9,7 +9,7 @@ const chalk = require('chalk');
 const ip = require('./ip')
 const morgan = require('morgan')
 const requestIp = require('request-ip');
-const loginRouter = require('./routes/login.route');
+const loginRouter = require('./routes/usuario.route');
 require('dotenv').config()
 
 const port = process.env.SERVER_PORT;
@@ -29,9 +29,7 @@ app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(requestIp.mw());
 app.use(morgan('dev'))
-app.use("/morales", route);
-app.use("/morales/login", loginRouter);
-
+app.use("/", route);
 //ENDPOINTS CONFIG
 let logger = (req, res, next) => {
     //TODO config authentication
@@ -41,6 +39,8 @@ let logger = (req, res, next) => {
     next();
 };
 app.use(logger);
+app.use("/user", loginRouter);
+
 // Tratamento de erro genérico
 app.use(function (err, req, res, next) {
     res.locals.message = err.message
@@ -54,6 +54,14 @@ app.use(function (err, req, res, next) {
             cause: err
         });
     }
+});
+
+app.use(function (err, req, res, next) {
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(500);
+    res.render('error', { error: err });
 });
 
 http.listen(port, () =>

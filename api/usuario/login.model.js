@@ -1,31 +1,16 @@
-const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const key = '123';
 const SECRET = process.env.SECRET || 'mydevkeysecret'
+const model = require('./user.model');
 
-geraHesh = (pass, salt) => {
-    return new Promise((res, rej) => {
-        bcrypt.hash(pass, salt, (err, hash) => {
-            // Store hash in your password DB.
-            console.log(hash);
-            res(hash);
-        });
-    })
-}
 module.exports = {
 
     login: (login, pass) => {
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
-                let fakeKey = crypto.createHash('md5').update(key).digest('hex');
 
-                const saltRounds = 10;
-                await geraHesh(pass, saltRounds).then((hash) => {
-                    fakeKey = hash;
-                });
-
-                bcrypt.compare(pass, fakeKey).then((match) => {
+                const usuario = await model.findByLogin(login);
+                bcrypt.compare(pass, usuario[0].dssenha).then((match) => {
                     console.log(match);
                     if (match) {
                         const token = jwt.sign({

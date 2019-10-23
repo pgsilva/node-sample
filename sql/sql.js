@@ -84,6 +84,7 @@ module.exports = {
                     if (err)
                         reject(err);
                     else
+                        console.log('Mysql conected')
                         resolve(connection);
                 });
             } catch (e) {
