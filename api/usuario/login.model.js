@@ -9,26 +9,34 @@ module.exports = {
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
 
-                const usuario = await model.findByLogin(login);
-                bcrypt.compare(pass, usuario[0].dssenha).then((match) => {
-                    console.log(match);
-                    if (match) {
-                        const token = jwt.sign({
-                            user: login
-                        }, SECRET, {
-                            expiresIn: 3600 * 24 // 1 dia para expirar o token
-                        });
+                const users = await model.findByLogin(login);
+                if (users[0]) {
+                    const agent = users[0];
+                    bcrypt.compare(pass, agent.dssenha).then((match) => {
+                        console.log(match);
+                        if (match) {
+                            const token = jwt.sign({
+                                user: login
+                            }, SECRET, {
+                                expiresIn: 3600 * 24 // 1 dia para expirar o token
+                            });
 
-                        return resolve({
-                            token: token,
-                            user: login
-                        })
-                    } else {
-                        reject({ msg: 'Dados inválidos' });
-                    }
-                }).catch((err) => {
-                    reject(err);
-                });
+                            return resolve({
+                                token: token,
+                                dsuser: login,
+                                nmusuario: agent.nmusuario,
+                                dsemail: agent.dsemail,
+                                acesso: new Date()
+                            })
+                        } else {
+                            reject({ msg: 'Dados inválidos' });
+                        }
+                    }).catch((err) => {
+                        reject(err);
+                    });
+                } else {
+                    reject({ msg: 'Dados inválidos' });
+                }
             }, 2000)
         })
     }
